@@ -1,0 +1,223 @@
+{% extends 'base.html.twig' %}
+
+    {% block body %}
+        
+<div class="section no-pad-bot" id="index-banner">
+    <div class="container">
+      
+      <div id="container-add-survey-assemble">
+
+       <h3>AJouter un sondage a l'assemble : {{assemble.title }}</h3>
+
+        {{ form_start(form, {'attr': {'novalidate': 'novalidate'}}) }}
+
+          {{ form_label(form.title) }}
+          <strong style="color:red">{{ form_errors(form.title) }}</strong>
+          {{ form_widget(form.title) }}
+          
+          {{ form_label(form.description) }}
+          <strong style="color:red">{{ form_errors(form.description) }}</strong>
+          {{ form_widget(form.description) }}
+
+          <button type="button" class="btn blue lighten-2" id="addNewsQuestion">Ajouter une question <i class="material-icons">add</i></button>
+           
+          <div id="survey_questionSurveys" data-prototype="<div><div id='assemble_htag___name__'><div><label for='assemble_htag___name___name' class='required'>Name</label><input type='text' id='assemble_htag___name___name' name='assemble[htag][__name__][name]' required='required' /></div></div></div>">
+          
+            {% for question in form.questionSurveys %}
+
+            <div class='row z-depth-3 questionSurveys' data-id='{{ loop.index }}' style='margin-top: 5px; padding: 10px;'>
+                
+                <button class='btn waves-effect waves-light red right-align deleteQuestion'><i class='material-icons'>cancel</i></button>
+                
+                <strong style="color:red">{{ form_errors(question.content) }}</strong>
+                {{ form_widget(question.content) }}
+
+                {{ form_label(question.type, '') }}
+                <strong style="color:red">{{ form_errors(question.type) }}</strong>
+                {{ form_widget(question.type) }}
+
+                <div class="answerQuestionSurvey">
+
+                {% if question.answerQuestionSurveys|length > 0 %}
+                  <button type='button' class='btn blue lighten-2 addNewsResponse'>Ajouter une Reponse <i class='material-icons'>add</i></button>
+                {% endif %}
+
+                {% for answer in question.answerQuestionSurveys %}
+
+                  <div class='answerQuestionSurveyItem z-depth-4 row' style='margin-top: 5px;'>
+                    <div class='col s11'>
+                      <div>
+                          {{ form_label(answer.content, '') }}
+                            <strong style="color:red">{{ form_errors(answer.content) }}</strong>
+                          {{ form_widget(answer.content) }}
+                      </div>
+                    </div>
+                    <div class='col s1'>
+                      <a href='#' style='' class='deleteAnswer btn waves-effect waves-light red right-align'><i class='material-icons'>cancel</i></a>
+                    </div>
+                  </div>
+                {% endfor %}
+                </div>
+
+            </div>
+
+            {% endfor %}
+            
+          </div>
+
+          
+          <button class="btn blue lighten-2" type="submit" style="display:block; margin: 0 auto; margin-top: 25px;">Sauvegarder le sondage</button>
+
+        {{ form_row(form._token) }}
+        {{ form_end(form, {'render_rest': false}) }}
+
+    </div>
+  </div>
+</div>
+
+
+    {% endblock %}
+
+{% block javascripts %}
+
+{{ parent() }}
+
+<script>
+
+$(document).ready(function(){
+
+  $('select').formSelect();
+
+  var $container = $('#survey_questionSurveys');
+  var index = $container.find('.questionSurveys').length;
+
+  if (index == 0){
+    addQuestion($container);
+  }
+
+  
+  $('#addNewsQuestion').click(function(e) {
+    e.preventDefault();
+    addQuestion($container);
+  })
+
+  $container.on('click', '.deleteAnswer', function(e) {
+    e.preventDefault();
+
+    let nbResponse = $(this).parent().parent().parent().find('.answerQuestionSurveyItem').length;
+    if (nbResponse > 2) {
+      $(this).parent().parent().remove();
+    }
+  });
+
+  $container.on('click', '.deleteQuestion', function(e) {
+    e.preventDefault();
+    $(this).parent().remove();
+  });
+
+  $container.on('click', '.addNewsResponse', function(e) {
+    e.preventDefault();
+
+    let indexQuestion = $(this).parent().parent().attr('data-id');
+    let indexResponse = $(this).parent().find('.answerQuestionSurveyItem').length;
+    let container = $(this).parent();
+
+    addResponse(indexQuestion, indexResponse, container);
+  });
+
+$container.on('change', 'select', function() {
+
+    let valSelected = $(this).find(":selected").val();
+    let containerResponse = $(this).parent().next();
+    let indexQuestion = $(this).parent().parent().attr('data-id');
+    if (valSelected == 'QCM' || valSelected == 'QCU') {
+
+      let html = "<button type='button' class='btn blue lighten-2 addNewsResponse'>Ajouter une Reponse <i class='material-icons'>add</i></button>";
+      containerResponse.html(html);
+  
+      addResponse(indexQuestion, 0, containerResponse);
+      addResponse(indexQuestion, 1, containerResponse);
+  
+    }
+    else {
+      containerResponse.html("");
+    }
+    
+
+});
+
+function addResponse(indexQuestion, indexReponse, container) {
+  let html = '';
+  html += "<div class='answerQuestionSurveyItem z-depth-4 row' style='margin-top: 5px;'>";
+    html += "<div class='col s11'>";
+      html += "<div id='survey_questionSurveys_" + indexQuestion + "_answerQuestionSurveys_" + indexReponse + ">";
+        html += "<label for='survey_questionSurveys_" + indexQuestion + "_answerQuestionSurveys_" + indexReponse + "_content' class='required'>";
+          html += "reponse : " + indexReponse;
+        html += "</label>";
+        html += "<input type='text' id='survey_questionSurveys_" + indexQuestion + "_answerQuestionSurveys_" + indexReponse + "_content' name='survey[questionSurveys][" + indexQuestion + "][answerQuestionSurveys][" + indexReponse + "][content]' required='required' maxlength='255' />";
+      html += "</div>";
+    html += "</div>";
+    html += "<div class='col s1'>";
+    html += "<a href='#' style='' class='deleteAnswer btn waves-effect waves-light red right-align'><i class='material-icons'>cancel</i></a>";
+    html += "</div>";
+  html += "</div>";
+
+  container.append(html);
+
+}
+
+function addQuestion($container) {
+
+    var html = "<div class='row z-depth-3 questionSurveys' data-id='" + index + "' style='margin-top: 5px; padding: 10px;'>";
+          html += "<button class='btn waves-effect waves-light red right-align deleteQuestion'><i class='material-icons'>cancel</i></button>";
+          html += "<div class='content'>";
+            html += "<label for='survey_questionSurveys_" + index + "_content' class='required'>Question : </label>";
+            html += "<input type='text' name='survey[questionSurveys][" + index + "][content]' id='survey_questionSurveys_" + index + "_content' required='required' maxlength='255'>";
+          html += "</div>";
+          html += "<div class='type'>";
+            html += "<label>Materialize Select</label>";
+            html += "<select id='survey_questionSurveys_" + index + "_type' name='survey[questionSurveys][" + index + "][type]' required='required' tabindex='-1''>";
+              html += "<option value selected='selected'>Type de la question :</option>";
+              html += "<option value='QCM'>Question a choix multiple</option>";
+              html += "<option value='QCU'>Question a choix unique</option>";
+              html += "<option value='TEXT'>Texte (reponse attendu de type texte)</option>";
+              html += "<option value='NUMBER'>Nombre (reponse attendu de type nombre)</option>";
+              html += "<option value='DATE'>Date (reponse attendu de type date)</option>";
+            html += "</select>";
+          html += "</div>";
+          html += "<div class='answerQuestionSurvey'>";
+            html += "</div>";
+          html += "</div>";
+        html += '</div>';
+
+    $container.append(html);
+
+    $('select').show();
+    index++;
+}
+
+  function addQuestionHold($container) {
+    console.log('hello add question');
+
+    var template = $container.attr('data-prototype')
+    .replace(/name__label/g, 'QuestionSurveys')
+    .replace(/__name__/g, index)
+    ;
+
+    var prototype = $(template);
+    
+    let html = "<div class='z-depth-3 questionSurveys' style='margin-top: 5px; padding: 10px;'>"
+        html += "<a href='#' style='' class='btn waves-effect waves-light red right-align'><i class='material-icons'>cancel</i></a>";
+        html += prototype[0].innerHTML;
+        html += "</div>";
+    
+    $container.append(html);
+
+    index++;
+  }
+
+});
+
+</script>
+
+{% endblock %}

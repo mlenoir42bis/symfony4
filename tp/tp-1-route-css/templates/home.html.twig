@@ -1,0 +1,25 @@
+{% extends 'base.html.twig' %}
+
+    {% block body %}
+        
+<div class="section no-pad-bot" id="index-banner">
+    <div class="container">
+      <br><br>
+      <h1 class="header center orange-text">get your choice :</h1>
+      <div class="row center">
+        <a class="btn-large waves-effect waves-light orange" href="{{  path('show', {choice:'france'}) }}">france</a>
+        <a class="btn-large waves-effect waves-light orange" href="{{  path('show', {choice:'angleterre'}) }}">angleterre</a>
+        <a class="btn-large waves-effect waves-light orange" href="{{  path('show', {choice:'espagne'}) }}">espagne</a>
+        <a class="btn-large waves-effect waves-light orange" href="{{  path('show', {choice:'italie'}) }}">italie</a>
+        </ul>
+      </div>
+      <br><br>
+
+    </div>
+  </div>
+</div>
+
+
+
+    {% endblock %}
+

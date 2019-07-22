@@ -1,0 +1,26 @@
+{% extends 'base.html.twig' %}
+
+    {% block body %}
+        
+<div class="section no-pad-bot" id="index-banner">
+    <div class="container">
+      <br><br>
+      <h1 class="header center orange-text">ShowById</h1>
+      <div class="row center">
+
+        <h3>Title : </h3>
+        <p>{{ book.title }}</p>
+        <h3>content : </h3>
+        <p>{{ book.content }}</p>
+
+      </div>
+      <br><br>
+
+    </div>
+  </div>
+</div>
+
+
+
+    {% endblock %}
+

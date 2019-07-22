@@ -1,0 +1,95 @@
+{% extends 'base.html.twig' %}
+
+    {% block body %}
+        
+<div class="section no-pad-bot" id="index-banner">
+    <div class="container">
+      
+      <div id="container-list-assemble">
+
+        <div id="list-assemble">
+
+                <h3 style="text-align: center;">{{ assembles.title }}</h3>
+                <hr>
+
+                {% if assembles.files|length > 0 %}
+                  <div id="film_roll"">
+
+                    {% for file in assembles.files %}
+
+                      {% if (file.type == 'jpeg') or (file.type == 'jpeg') or (file.type == 'png') %}
+                        <div>
+                          <a href="#{{loop.index}}"><img style="width: 330px; height: 330px;" src="{{ asset('uploads/')~file.myFile }}"></a>
+                        </div>
+                      {% elseif (file.type == 'docx') or (file.type == 'doc') or (file.type == 'pdf') %}
+                        <div> 
+                          <a class="word" href="{{ asset('uploads/')~file.myFile }}"><img style="width: 330px; height: 330px;" src="{{ asset('doc-icon.png') }}"></a>
+                        </div>
+                      {% endif %}
+
+
+                    {% endfor %}
+                  
+                  </div>
+                {% endif %}
+                  
+                
+                <h4>Htag</h4>
+                {% for htag in assembles.htag %}
+
+                  <div class="btn blue lighten-3">
+                    {{ htag.name }}
+                  </div>
+
+                {% endfor %}
+
+                <h4>Sujet de l'assemblé</h4>
+                <div class="z-depth-1">
+                <p>{{ assembles.subject }}</p>
+                </div>
+                
+                <h4>Resume préliminaire de l'assemblé</h4>
+                <div class="z-depth-1">
+                <p>{{ assembles.resume }}</p>
+                </div>
+                
+                <h4>Analyse préliminaire de l'assemblé</h4>
+                <div class="z-depth-1">
+                <p>{{ assembles.analyse }}</p>
+                </div>
+                
+
+          
+        </div>
+      </div>
+
+    </div>
+  </div>
+</div>
+
+<div id="my_modal" class="modal">
+  <p>Thanks for clicking. That felt good.</p>
+  <a href="#" rel="modal:close">Close</a>
+</div>
+
+
+    {% endblock %}
+
+
+
+  {% block javascripts %}
+
+    {{ parent() }}
+
+    <script src="{{ asset('js/filmRoll.js')}}"></script>
+    <script>
+        $(function() {
+          fr = new FilmRoll({
+            container: '#film_roll',
+            height: 330
+          });
+        });        
+
+    </script
+
+  {% endblock %}

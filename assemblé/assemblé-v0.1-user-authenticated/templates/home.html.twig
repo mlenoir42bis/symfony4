@@ -1,0 +1,51 @@
+{% extends 'base.html.twig' %}
+
+    {% block body %}
+        
+<div class="section no-pad-bot" id="index-banner">
+    <div class="container">
+      
+      <div id="container-list-assemble">
+
+        <div id="console">
+  <div class="row">
+    <div class="col s12 m12">
+      <div class="card blue-grey darken-1">
+        <div class="card-content white-text">
+          {% if is_granted('ROLE_USER') %}
+            <a class="waves-effect waves-light btn">Créer une assemblée</a>
+          {% endif %}
+        </div>
+        <div class="card-action">
+        </div>
+      </div>
+    </div>
+  </div>
+
+        </div>
+
+        <div id="list-assemble">
+          <table>
+        
+          {% for assemble in assembles %}
+          <tr>
+            <td>
+            <h3>{{ assemble.title }}</h3>
+            </td>
+            <td>
+              <a href="{{ path('home', {'id': assemble.id}) }}" class="waves-effect waves-light btn pull-right" style="margin-left: 0px;">Voir details</a>
+            </td>
+            
+          
+          {% endfor %}
+          </table>
+        </div>
+      </div>
+
+    </div>
+  </div>
+</div>
+
+
+    {% endblock %}
+

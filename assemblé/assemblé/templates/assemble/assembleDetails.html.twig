@@ -1,0 +1,146 @@
+{% extends 'base.html.twig' %}
+
+    {% block body %}
+        
+<div class="section no-pad-bot" id="index-banner">
+    <div class="container">
+      
+      <div id="container-list-assemble" class="row">
+
+        <div id="list-assemble" class="col s8">
+
+                <h3 style="text-align: center;">{{ assembles.title }}</h3>
+                <hr>
+
+                {% if assembles.files|length > 0 %}
+                  <div id="film_roll">
+
+                    {% for file in assembles.files %}
+
+                      {% if (file.type == 'jpeg') or (file.type == 'jpeg') or (file.type == 'png') %}
+                        <div>
+                          <a href="#{{loop.index}}"><img style="width: 330px; height: 330px;" src="{{ asset('uploads/')~file.myFile }}"></a>
+                        </div>
+                      {% elseif (file.type == 'docx') or (file.type == 'doc') or (file.type == 'pdf') %}
+                        <div> 
+                          <a class="word" href="{{ asset('uploads/')~file.myFile }}"><img style="width: 330px; height: 330px;" src="{{ asset('doc-icon.png') }}"></a>
+                        </div>
+                      {% endif %}
+
+
+                    {% endfor %}
+                  
+                  </div>
+                {% endif %}
+                  
+                
+                <h4>Htag</h4>
+                {% for htag in assembles.htag %}
+
+                  <div class="btn blue lighten-3">
+                    {{ htag.name }}
+                  </div>
+
+                {% endfor %}
+
+                <h4>Sujet de l'assemblé</h4>
+                <div class="z-depth-1">
+                <p>{{ assembles.subject }}</p>
+                </div>
+                
+                <h4>Resume préliminaire de l'assemblé</h4>
+                <div class="z-depth-1">
+                <p>{{ assembles.resume }}</p>
+                </div>
+                
+                <h4>Analyse préliminaire de l'assemblé</h4>
+                <div class="z-depth-1">
+                <p>{{ assembles.prev_analyse }}</p>
+                </div>
+                
+
+
+        </div>
+        <div id="sidebar" class="col s4">
+        
+          <div id="survey">
+
+            <h5>Sondage de l'assemblé</h5>
+          {% for survey in assembles.surveys %}
+            <div class="z-depth-2 row" style="padding: 10px;">
+
+              <p class="surveyTitle">{{ survey.title }}</p>
+              <hr/>
+              <p class="surveyTitle">{{ survey.description }}</p>
+              
+              <a style="display: block; margin: 0 auto;" href="#" class="btn blue lighten-2 viewsSurvey" data-id="{{ survey.id }}" >Resultat du sondage</a>
+              <a style="display: block; margin: 0 auto; margin-top: 5px;" href="{{ path('user-reply-survey-assemble', {'id': survey.id}) }}" class="btn purple lighten-2 replySurvey">Repondre au sondage</a>
+
+              {% if is_granted('DELETE', assembles) %}
+                <a style="display: block; margin: 0 auto; margin-top: 5px;" href="{{ path('user-delete-survey-assemble', {'id': survey.id, 'idAssemble': assembles.id}) }}" class="red lighten-2 btn pull-right">Delete</a>
+              {% endif %}
+
+            </div>
+
+          {% endfor %}
+
+          </div>
+
+        </div>
+
+      </div>
+
+      <div id="comment" class="" style="padding: 25px;">
+
+        {% if is_granted('ROLE_USER') %}
+
+        <div form class="z-depth-2 blue lighten-4" style="padding: 25px;">
+            {{ form_start(form, {'attr': {'novalidate': 'novalidate'}}) }}
+              
+              {{ form_widget(form.subject) }}
+              <button class="btn blue lighten-2" type="submit" style="display:block; margin: 0 auto; margin-top: 25px; margin-bottom: 25px;">Ajouter un commentaire</button>
+
+            {{ form_end(form) }}
+        </div>
+
+        {% endif %}
+
+
+        {% for comment in assembles.comments %}
+
+          <div class="z-depth-2 row" style="padding: 10px;">
+
+            <p class="commentDate col s6">{{ comment.CreatedAt|date("m/d/Y H:i:s") }}</p>
+            <p class="commentEmail col s6 right-align">{{ comment.User.email }}</p>
+            <p class="z-depth-3 commentSubject col s12" style="border-radius: 15px; background-color: #bbdefb; padding: 25px;">{{ comment.subject }}</p>
+          
+          </div>
+
+        {% endfor %}
+
+      <div>
+
+    </div>
+  </div>
+</div>
+
+    {% endblock %}
+
+
+
+  {% block javascripts %}
+
+    {{ parent() }}
+
+    <script src="{{ asset('js/filmRoll.js')}}"></script>
+    <script>
+        $(function() {
+          fr = new FilmRoll({
+            container: '#film_roll',
+            height: 330
+          });
+        });        
+
+    </script
+
+  {% endblock %}

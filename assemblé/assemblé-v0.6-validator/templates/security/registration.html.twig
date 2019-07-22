@@ -1,0 +1,26 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Registration!{% endblock %}
+
+{% block body %}
+
+<div class="section no-pad-bot" id="index-banner">
+    <div class="container">
+
+
+    <h1 class="h3 mb-3 font-weight-normal">Please registration</h1>
+    
+    <div class="row">
+        <div class="col m12">
+                {{ form_start(form) }}
+                    {{ form_row(form.email) }}
+                    {{ form_row(form.password) }}
+                    <button type="submit" class="btn btn-primary" style="display: block; margin: 0 auto;">Create!</button>
+                {{ form_end(form) }}
+        </div>
+    </div>
+    
+</div>
+</div>
+
+{% endblock %}

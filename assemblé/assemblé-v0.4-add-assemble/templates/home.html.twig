@@ -1,0 +1,47 @@
+{% extends 'base.html.twig' %}
+
+    {% block body %}
+        
+<div class="section no-pad-bot" id="index-banner">
+    <div class="container">
+      
+      <div id="container-list-assemble">
+
+        <div id="console">
+          <div class="row">
+            <div class="col s12 m12">
+                
+                  {% if is_granted('ROLE_USER') %}
+                    <a class="blue lighten-2 btn" href="{{ path('user-add-assemble') }}">Créer une assemblée</a>
+                  {% endif %}
+
+            </div>
+          </div>
+        </div>
+
+        <div id="list-assemble">
+          
+          <table>
+        
+          {% for assemble in assembles %}
+            <tr>
+              <td>
+                <h3>{{ assemble.title }}</h3>
+              </td>
+              <td>
+                <a href="{{ path('assemble-details', {'id': assemble.id}) }}" class="blue lighten-2 btn pull-right">Voir details</a>
+              </td>
+            </tr>
+          {% endfor %}
+
+          </table>
+        </div>
+      </div>
+
+    </div>
+  </div>
+</div>
+
+
+    {% endblock %}
+

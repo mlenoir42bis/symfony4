@@ -1,0 +1,35 @@
+{% extends 'base.html.twig' %}
+
+    {% block body %}
+        
+<div class="section no-pad-bot" id="index-banner">
+    <div class="container">
+      <br><br>
+      <h1 class="header center orange-text">Add book</h1>
+      <div class="row center">
+
+        {{ form_start(form, {'attr': {'novalidate': 'novalidate'}}) }}
+
+          {{ form_label(form.title) }}
+          {{ form_widget(form.title) }}
+          <strong style="color:red">{{ form_errors(form.title) }}</strong>
+
+          {{ form_label(form.content) }}
+          {{ form_widget(form.content) }}
+          <strong style="color:red">{{ form_errors(form.content) }}</strong>
+
+          <button class="btn waves-effect waves-light" type="submit">Ajouter</button>
+
+        {{ form_end(form) }}
+
+      </div>
+      <br><br>
+
+    </div>
+  </div>
+</div>
+
+
+
+    {% endblock %}
+

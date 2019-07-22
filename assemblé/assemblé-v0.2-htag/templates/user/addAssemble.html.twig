@@ -1,0 +1,85 @@
+{% extends 'base.html.twig' %}
+
+    {% block body %}
+        
+<div class="section no-pad-bot" id="index-banner">
+    <div class="container">
+      
+      <div id="container-list-assemble">
+
+       <h1>Add assemble</h1>
+
+        {{ form_start(form, {'attr': {'novalidate': 'novalidate'}}) }}
+
+          {{ form_label(form.title) }}
+          {{ form_widget(form.title) }}
+          <strong style="color:red">{{ form_errors(form.title) }}</strong>
+
+          <button id="addHtag" class="btn waves-effect waves-light" type="button" style="">Add Htag</button>
+
+          <br/>
+
+          {{ form_label(form.htag) }}
+          {{ form_widget(form.htag) }}
+          {{ form_errors(form.htag) }}
+
+
+          {{ form_row(form.subject) }}
+          {{ form_row(form.resume) }}
+
+          {{ form_label(form.analyse, 'Analyse et contexte') }}
+          {{ form_widget(form.analyse) }}
+          <strong style="color:red">{{ form_errors(form.analyse) }}</strong>
+
+          <button class="btn waves-effect waves-light" type="submit" style="display:block; margin: 0 auto; margin-top: 25px;">Ajouter</button>
+
+        {{ form_end(form) }}
+
+    </div>
+  </div>
+</div>
+
+
+    {% endblock %}
+
+{% block javascripts %}
+
+{{ parent() }}
+
+<script>
+
+$(document).ready(function(){
+
+  console.log('test add assemble');
+
+  var $container = $('#assemble_htag');
+
+  var index =$container.find('.input').length;
+
+  if (index == 0){
+    addHtag($container);
+  }
+
+  $('#addHtag').click(function(e) {
+    e.preventDefault();
+    addHtag($container);
+  })
+
+  function addHtag($container) {
+
+    var template =$container.attr('data-prototype')
+    .replace(/name__label/g, 'Htag n° ' + (index + 1))
+    .replace(/__name__/g, index)
+    ;
+
+    var prototype = $(template);
+    $container.append(prototype);
+
+    index++;
+  }
+
+});
+
+</script>
+
+{% endblock %}

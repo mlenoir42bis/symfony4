@@ -1,0 +1,51 @@
+{% extends 'base.html.twig' %}
+
+    {% block body %}
+        
+<div class="section no-pad-bot" id="index-banner">
+    <div class="container">
+      <br><br>
+      <h1 class="header center orange-text">home</h1>
+      <div class="row center">
+        
+        <ul>
+        
+        <table>
+          <thead>
+            <tr>
+              <th>Name</th>
+              <th></th>
+            </tr>
+          <thead>
+          <tbody>  
+        {% for book in books %}
+        
+        <tr>
+          <td>
+            {{ book.title }}
+           </td> 
+           <td>
+             <a href="{{ path('showById', {'id': book.id}) }}" class="waves-effect waves-light btn">view</a>
+             <a href="{{ path('edit', {'id': book.id}) }}" class="orange lighten-2 btn">edit</a>
+             <a href="{{ path('delete', {'id': book.id}) }}" class="red lighten-2 btn">delete</a>
+           </td> 
+        </tr>
+        
+        {% endfor %}
+        </tbody>
+        <table>
+
+
+        </ul>
+
+      </div>
+      <br><br>
+
+    </div>
+  </div>
+</div>
+
+
+
+    {% endblock %}
+

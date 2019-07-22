@@ -1,0 +1,131 @@
+{% extends 'base.html.twig' %}
+
+    {% block body %}
+        
+<div class="section no-pad-bot" id="index-banner">
+    <div class="container">
+      
+      <div id="container-list-assemble">
+
+       <h4 class="center-align" survey-id="{{ survey.id }}" user-id="{{ app.user.id }}" >Repondre au sondage</h4>
+
+        <h5 class="z-depth-2 center-align">{{ survey.title }}</h5>
+
+        <p class="z-depth-2" style="padding=10px;">{{ survey.description }}</p>
+        
+          <form id="form_question">
+              {% for question in survey.questionSurveys %}
+
+              <div class="question z-depth-2" style="padding=10px!important;">
+                <p>{{ question.content }} ? </p>
+                <hr>
+                    
+                    <input name="question[{{ loop.index }}][idQuestion]" type="hidden" value="{{question.id}}">
+                    <input name="question[{{ loop.index }}][typeQuestion]" type="hidden" value="{{question.type}}">
+                                        
+                    {% if (question.type == "QCM")  %}
+                      <select multiple name="question[{{ loop.index }}][answer][]">
+                          {% for reponseQuestion in question.answerQuestionSurveys %}
+                            <option value="{{ reponseQuestion.id }}">{{ reponseQuestion.content }}</option>
+                          {% endfor %}
+                      </select>
+                    {% endif %}
+                    {% if (question.type == "QCU")  %}
+                      <select name="question[{{ loop.index }}][answer]">
+                          {% for reponseQuestion in question.answerQuestionSurveys %}
+                            <option value="{{ reponseQuestion.id }}">{{ reponseQuestion.content }}</option>
+                          {% endfor %}
+                      </select>
+                    {% endif %}
+                    {% if (question.type == "TEXT")  %}
+                      <input name="question[{{ loop.index }}][answer]" type="text">
+                    {% endif %}
+                    {% if (question.type == "NUMBER")  %}
+                      <input name="question[{{ loop.index }}][answer]" type="number">
+                    {% endif %}
+                    {% if (question.type == "DATE")  %}
+                      <input name="question[{{ loop.index }}][answer]" type="date">
+                    {% endif %}
+
+                </div>
+
+              {% endfor %}
+
+            <button class="btn blue lighten-2" type="submit" style="display:block; margin: 0 auto; margin-top: 25px;">Modifier</button>
+
+          </form>
+
+    </div>
+  </div>
+</div>
+
+
+    {% endblock %}
+
+{% block javascripts %}
+
+{{ parent() }}
+
+<script>
+
+$(document).ready(function(){
+
+$('select').formSelect();
+
+$("#form_question").on('submit', function(e){
+  e.preventDefault();
+  console.log("submit");
+
+  let data = $('#form_question').serializeArray();
+
+  let error = 0;
+  $.each(data, function(propName, propVal) {
+    $.each(propVal, function(propName2, propVal2) {
+      if (propName2 == "value" && propVal2 == "") {
+          error += 1;
+      }
+    });
+  });
+
+  if (error > 0) {
+    M.toast({html: 'Vous devez répondre a toutes les questions'})
+  }
+  else if (data.length == 0) {
+    M.toast({html: 'Aucune réponse trouvé'})
+  }
+  else {
+
+    data = new FormData(this);
+
+    let surveyId = $('h4').attr('survey-id');
+    data.append('surveyId', surveyId);  
+    let userId = $('h4').attr('user-id');
+    data.append('userId', userId);  
+    let url = '/user/replyAjax/assemble/survey';
+
+    $.ajax({
+        method: "POST",
+        url: url,
+        data: data,
+        processData: false,
+        contentType: false,
+        success: function (res) {
+          console.log("success")
+          console.log(res)
+        },
+        error: function (res) {
+          console.log("error");
+          console.log(res);
+        }
+    })
+  
+
+  }
+
+});
+
+});
+
+</script>
+
+{% endblock %}

@@ -1,0 +1,35 @@
+{% extends 'base.html.twig' %}
+
+    {% block body %}
+        
+<div class="section no-pad-bot" id="index-banner">
+    <div class="container">      
+      <div id="container-list-assemble">
+
+        <h3>Mes assemblés</h3>
+        
+        <table>
+          {% for assemble in assembles %}
+          
+            <tr>
+                <td>
+                     <h3>{{ assemble.title }}</h3>
+                </td>
+                <td>
+                <a href="{{ path('assemble-details', {'id': assemble.id}) }}" class=" blue lighten-3 btn pull-right" style="margin-left: 0px;">Voir details</a>
+                {% if is_granted('EDIT', assemble) %}
+                  <a href="{{ path('user-edit-assemble', {'id': assemble.id}) }}" class="deep-purple lighten-2 btn pull-right">Edit</a>
+                  <a href="{{ path('user-delete-assemble', {'id': assemble.id}) }}" class="red lighten-2 btn pull-right">Delete</a>
+                {% endif %}
+                </td>
+            </tr>   
+          {% endfor %}
+        </table>
+
+    </div>
+  </div>
+</div>
+
+
+    {% endblock %}
+

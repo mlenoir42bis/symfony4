@@ -1,0 +1,9 @@
+logout:
+  path: /logout
+
+User:
+  path:       /user/delete/assemble/survey/{id}
+  controller: App\Controller\UserController::pageActionDeleteAssembleSurvey
+  defaults:
+      page: 0
+      title: 0

@@ -1,0 +1,189 @@
+{% extends 'base.html.twig' %}
+
+    {% block body %}
+        
+<div class="section no-pad-bot" id="index-banner">
+    <div class="container">
+      
+      <div id="container-list-assemble">
+
+       <h1>Edit assemble</h1>
+
+        {{ form_start(form, {'attr': {'novalidate': 'novalidate'}}) }}
+
+          {{ form_label(form.title) }}
+          {{ form_widget(form.title) }}
+          <strong style="color:red">{{ form_errors(form.title) }}</strong>
+
+        <div class="z-depth-2" style="padding: 15px;">
+          <button id="addHtag" class="btn waves-effect waves-light" type="button" style="margin: 25px;">Add Htag</button>
+
+          <br/>
+
+          <div id="assemble_htag" data-prototype="<div><div id='assemble_htag___name__'><div><label for='assemble_htag___name___name' class='required'>Name</label><input type='text' id='assemble_htag___name___name' name='assemble[htag][__name__][name]' required='required' /></div></div></div>">
+          
+            {% for htag in form.htag %}
+                  <div class="z-depth-3 myHtag bddHtag"  style="margin-top: 5px; padding: 10px;">
+                    <a href="#" data-delete-path="{{ path('assemble-delete-htag', {'id': htag.vars.value.id}) }}" attr-id="{{ htag.vars.value.id }}" style="" class="btn btn-delete waves-effect waves-light red right-align"><i class="material-icons">cancel</i></a>
+                    {{ form_row(htag, { } ) }}
+                  </div>
+            {% endfor %}
+            
+          </div>
+          
+        </div>
+        
+          <div class="z-depth-2" style="padding: 15px;">
+
+            <div id="hold-files" class="row">
+            
+            {% if form.files|length > 0 %}
+
+                    {% for file in form.files %}
+
+                        {% if (file.vars.value.type == 'jpeg') or (file.vars.value.type == 'jpeg') or (file.vars.value.type == 'png') %}
+                          <div class="col s3">
+                            <img style="width: 150px; height: 150px; display:block; margin:0 auto;" src="{{ asset('uploads/')~file.vars.value.myFile }}">
+                            <a href='#' data-delete-path="{{ path('assemble-delete-file', {'id': file.vars.value.id}) }}" attr-id="{{ file.vars.value.id }}" style="display:block; margin:0 auto;" class='deleteFile btn waves-effect waves-light red right-align'><i class='material-icons'>cancel</i></a>
+                          </div>
+                        {% elseif (file.vars.value.type == 'docx') or (file.vars.value.type == 'doc') or (file.vars.value.type == 'pdf') %}
+                          <div class="col s3"> 
+                            <a class="word" href="{{ asset('uploads/')~file.vars.value.myFile }}"><img style="width: 330px; height: 330px;" src="{{ asset('doc-icon.png') }}"></a>
+                            <a href='#' data-delete-path="{{ path('assemble-delete-file', {'id': file.vars.value.id}) }}" attr-id="{{ file.vars.value.id }}" style="display:block; margin:0 auto;" class='deleteFile btn waves-effect waves-light red right-align'><i class='material-icons'>cancel</i></a>
+                          </div>
+                        {% endif %}
+
+                    {% endfor %}
+
+            {% endif %}
+            
+            </div>
+
+            <div id="assemble_files" data-prototype="<div><label class='required'>__name__label__</label><div id='assemble_files___name__'><div><label for='assemble_files___name___fileUpload' class='required'>Ajoutez des fichiers : </label><input type='file' id='assemble_files___name___fileUpload' name='assemble[files][__name__][fileUpload][]' required='required' multiple='multiple' /></div></div></div>">
+
+              <input type="file" id="form_files" name="assemble[files][1][fileUpload][]" required="required" multiple />
+          
+            </div>
+          </div>
+
+          {{ form_row(form.subject) }}
+          {{ form_row(form.resume) }}
+
+          {{ form_label(form.analyse, 'Analyse et contexte') }}
+          {{ form_widget(form.analyse) }}
+          <strong style="color:red">{{ form_errors(form.analyse) }}</strong>
+
+          <button class="btn waves-effect waves-light" type="submit" style="display:block; margin: 0 auto; margin-top: 25px;">Ajouter</button>
+
+        {{ form_row(form._token) }}
+        {{ form_end(form, {'render_rest': false}) }}
+
+    </div>
+  </div>
+</div>
+
+
+    {% endblock %}
+
+{% block javascripts %}
+
+{{ parent() }}
+
+<script>
+
+$(document).ready(function(){
+
+  var $container = $('#assemble_htag');
+  var index =$container.find('.myHtag').length;
+
+  if (index == 0){
+    addHtag($container);
+  }
+
+
+  $('.deleteFile').click(function(e) {
+    e.preventDefault();
+    
+    let path = $(this).attr('data-delete-path');
+    let id = $(this).attr('attr-id');
+    let parent = $(this).parent();
+    
+    console.log(path);
+    console.log(id);
+    console.log(parent);
+
+    $.ajax({
+      method: "POST",
+      url: path,
+      data: {id: id},
+      dataType: 'json', 
+      contentType: "application/json; charset=utf-8", 
+      success: function (res) {
+        parent.remove();
+      },
+      error: function (res) {
+        console.log("delete error");
+        console.log(res);
+      }
+    })
+
+  })
+
+  $('#addHtag').click(function(e) {
+    e.preventDefault();
+    addHtag($container);
+  })
+
+  $("#assemble_htag").on('click', '.newHtag a', function(e) {
+    e.preventDefault();
+    $(this).parent().remove();
+  })
+
+  $('.bddHtag .btn-delete').click(function(e) {
+    e.preventDefault();
+    
+    let path = $(this).attr('data-delete-path');
+    let id = $(this).attr('attr-id');
+    let parent = $(this).parent();
+    
+    $.ajax({
+      method: "POST",
+      url: path,
+      data: {id: id},
+      dataType: 'json', 
+      contentType: "application/json; charset=utf-8", 
+      success: function (res) {
+        parent.remove();
+      },
+      error: function (res) {
+        console.log("delete error");
+        console.log(res);
+      }
+    })
+
+  })
+
+  function addHtag($container) {
+
+    var template = $container.attr('data-prototype')
+    .replace(/name__label/g, 'Htag')
+    .replace(/__name__/g, index)
+    ;
+
+    var prototype = $(template);
+
+    let html = "<div class='z-depth-3 myHtag newHtag' style='margin-top: 5px; padding: 10px;'>"
+        html += "<a href='#' style='' class='btn waves-effect waves-light red right-align'><i class='material-icons'>cancel</i></a>";
+        html += prototype[0].innerHTML;
+        html += "</div>";
+        
+    $container.append(html);
+
+    index++;
+  }
+
+});
+
+</script>
+
+{% endblock %}
